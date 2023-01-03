@@ -131,3 +131,20 @@ databaseChangeLog:
               - column:
                   name: is_confirm
                   value: "true"
+  - changeSet:
+      id: 4
+      author: asurkov
+      comment: Insert telegram_data
+      changes:
+        - insert:
+            tableName: telegram_data
+            columns:
+              - column:
+                  name: player_id
+                  valueComputed: (select id from player where login = 'sb15551')
+              - column:
+                  name: chat_id
+                  value: 89520512
+              - column:
+                  name: type
+                  value: "PRIVATE"

@@ -331,3 +331,40 @@ databaseChangeLog:
             initiallyDeferred: true
             disabled: false
             validate: true
+  - changeSet:
+      id: 9
+      author: asurkov
+      comment: Create table telegram_data
+      changes:
+        - createTable:
+            tableName: telegram_data
+            remarks: Telegram data
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: Identifier
+              - column:
+                  name: player_id
+                  type: BIGINT
+              - column:
+                  name: chat_id
+                  type: BIGINT
+              - column:
+                  name: type
+                  type: VARCHAR(16)
+        - addForeignKeyConstraint:
+            baseTableName: telegram_data
+            baseColumnNames: player_id
+            constraintName: fk_telegram_data_player
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedTableName: player
+            referencedColumnNames: id
+            validate: true

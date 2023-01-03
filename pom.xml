@@ -9,11 +9,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>ru.samarkand</groupId>
-    <artifactId>tight-or-boil</artifactId>
+    <groupId>ru.mitch</groupId>
+    <artifactId>mitch</artifactId>
     <version>1.0.0</version>
-    <name>tight-or-boil</name>
-    <description>tight-or-boil</description>
+    <name>mitch</name>
+    <description>Mitch poker club statistics application</description>
 
     <properties>
         <java.version>19</java.version>
@@ -154,7 +154,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.0</version>
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
                     <violationSeverity>warning</violationSeverity>

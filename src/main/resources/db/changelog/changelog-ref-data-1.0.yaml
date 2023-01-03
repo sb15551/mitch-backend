@@ -1,0 +1,133 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: asurkov
+      comment: Insert roles
+      changes:
+        - insert:
+            tableName: ref_role
+            columns:
+              - column:
+                  name: name
+                  value: Супер админ
+              - column:
+                  name: code
+                  value: ROOT
+        - insert:
+            tableName: ref_role
+            columns:
+              - column:
+                  name: name
+                  value: Админ
+              - column:
+                  name: code
+                  value: ADMIN
+        - insert:
+            tableName: ref_role
+            columns:
+              - column:
+                  name: name
+                  value: Игрок
+              - column:
+                  name: code
+                  value: PLAYER
+  - changeSet:
+      id: 2
+      author: asurkov
+      comment: Insert statuses
+      changes:
+        - insert:
+            tableName: ref_status
+            columns:
+              - column:
+                  name: type
+                  value: PLAYER
+              - column:
+                  name: code
+                  value: ACTIVE
+              - column:
+                  name: name
+                  value: Активен
+        - insert:
+            tableName: ref_status
+            columns:
+              - column:
+                  name: type
+                  value: PLAYER
+              - column:
+                  name: code
+                  value: CREATE
+              - column:
+                  name: name
+                  value: Создан
+        - insert:
+            tableName: ref_status
+            columns:
+              - column:
+                  name: type
+                  value: PLAYER
+              - column:
+                  name: code
+                  value: DELETED
+              - column:
+                  name: name
+                  value: Удален
+        - insert:
+            tableName: ref_status
+            columns:
+              - column:
+                  name: type
+                  value: TOURNAMENT
+              - column:
+                  name: code
+                  value: REGISTRATION
+              - column:
+                  name: name
+                  value: Регистрация
+        - insert:
+            tableName: ref_status
+            columns:
+              - column:
+                  name: type
+                  value: TOURNAMENT
+              - column:
+                  name: code
+                  value: INPROGRESS
+              - column:
+                  name: name
+                  value: Турнир в процессе
+        - insert:
+            tableName: ref_status
+            columns:
+              - column:
+                  name: type
+                  value: TOURNAMENT
+              - column:
+                  name: code
+                  value: FINISHED
+              - column:
+                  name: name
+                  value: Завершен
+  - changeSet:
+      id: 3
+      author: asurkov
+      comment: Insert player
+      changes:
+        - insert:
+            tableName: player
+            columns:
+              - column:
+                  name: login
+                  value: 'sb15551'
+              - column:
+                  name: password
+                  value: '$2a$12$fer58WQJL3t7Dp1NxCWMj.WnLM8fsJnjuc.rsHANewC7mR8DthLk.'
+              - column:
+                  name: role_id
+                  valueComputed: (select id from ref_role where code = 'ROOT')
+              - column:
+                  name: status_id
+                  valueComputed: (select id from ref_status where type = 'PLAYER' and code = 'ACTIVE')
+              - column:
+                  name: is_confirm
+                  value: "true"

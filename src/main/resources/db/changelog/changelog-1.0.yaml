@@ -1,0 +1,333 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: asurkov
+      comment: Create table ref_role
+      changes:
+        - createTable:
+            tableName: ref_role
+            remarks: Role reference
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: Identifier
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+              - column:
+                  name: code
+                  type: VARCHAR(50)
+  - changeSet:
+      id: 2
+      author: asurkov
+      comment: Create table ref_location
+      changes:
+        - createTable:
+            tableName: ref_location
+            remarks: Location reference
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: Identifier
+              - column:
+                  name: name
+                  type: VARCHAR(500)
+  - changeSet:
+      id: 3
+      author: asurkov
+      comment: Create table ref_status
+      changes:
+        - createTable:
+            tableName: ref_status
+            remarks: Status reference
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: Identifier
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+              - column:
+                  name: code
+                  type: VARCHAR(50)
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+  - changeSet:
+      id: 4
+      author: asurkov
+      comment: Create table image
+      changes:
+        - createTable:
+            tableName: image
+            remarks: Images table
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: Identifier
+              - column:
+                  name: link
+                  type: VARCHAR
+  - changeSet:
+      id: 5
+      author: asurkov
+      comment: Create table album
+      changes:
+        - createTable:
+            tableName: album
+            remarks: Albums table
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: Identifier
+              - column:
+                  name: image_id
+                  type: BIGINT
+        - addForeignKeyConstraint:
+            baseTableName: album
+            baseColumnNames: image_id
+            constraintName: fk_album_image
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedTableName: image
+            referencedColumnNames: id
+            validate: true
+  - changeSet:
+      id: 6
+      author: asurkov
+      comment: Create table player
+      changes:
+        - createTable:
+            tableName: player
+            remarks: Players table
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: Identifier
+              - column:
+                  name: login
+                  type: VARCHAR(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(500)
+              - column:
+                  name: surname
+                  type: VARCHAR(500)
+              - column:
+                  name: role_id
+                  type: BIGINT
+              - column:
+                  name: status_id
+                  type: BIGINT
+              - column:
+                  name: is_confirm
+                  type: BOOLEAN
+              - column:
+                  name: created_date
+                  type: TIMESTAMP
+                  defaultValue: NOW()
+        - addForeignKeyConstraint:
+            baseTableName: player
+            baseColumnNames: role_id
+            constraintName: fk_player_ref_role
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedTableName: ref_role
+            referencedColumnNames: id
+            validate: true
+        - addForeignKeyConstraint:
+            baseTableName: player
+            baseColumnNames: status_id
+            constraintName: fk_player_ref_status
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedTableName: ref_status
+            referencedColumnNames: id
+            validate: true
+        - addUniqueConstraint:
+            tableName: player
+            columnNames: login
+            constraintName: unq_column_login
+            deferrable: true
+            initiallyDeferred: true
+            disabled: false
+            validate: true
+  - changeSet:
+      id: 7
+      author: asurkov
+      comment: Create table tournament
+      changes:
+        - createTable:
+            tableName: tournament
+            remarks: Tournaments table
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: Identifier
+              - column:
+                  name: event_date
+                  type: TIMESTAMP
+              - column:
+                  name: location_id
+                  type: BIGINT
+              - column:
+                  name: buyin
+                  type: INT
+              - column:
+                  name: rebuy
+                  type: INT
+              - column:
+                  name: addon
+                  type: INT
+              - column:
+                  name: album_id
+                  type: BIGINT
+              - column:
+                  name: top_places
+                  type: INT
+              - column:
+                  name: status_id
+                  type: BIGINT
+        - addForeignKeyConstraint:
+            baseTableName: tournament
+            baseColumnNames: location_id
+            constraintName: fk_tournament_ref_location
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedTableName: ref_location
+            referencedColumnNames: id
+            validate: true
+        - addForeignKeyConstraint:
+            baseTableName: tournament
+            baseColumnNames: album_id
+            constraintName: fk_tournament_album
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedTableName: album
+            referencedColumnNames: id
+            validate: true
+        - addForeignKeyConstraint:
+            baseTableName: tournament
+            baseColumnNames: status_id
+            constraintName: fk_tournament_ref_status
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedTableName: ref_status
+            referencedColumnNames: id
+            validate: true
+  - changeSet:
+      id: 8
+      author: asurkov
+      comment: Create table tournaments_participants
+      changes:
+        - createTable:
+            tableName: tournaments_participants
+            remarks: Assigning players to tournaments
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: Identifier
+              - column:
+                  name: player_id
+                  type: BIGINT
+              - column:
+                  name: tournament_id
+                  type: BIGINT
+              - column:
+                  name: place
+                  type: INT
+              - column:
+                  name: count_rebuy
+                  type: INT
+              - column:
+                  name: is_addon
+                  type: BOOLEAN
+        - addForeignKeyConstraint:
+            baseTableName: tournaments_participants
+            baseColumnNames: tournament_id
+            constraintName: fk_tournaments_participants_tournament
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedTableName: tournament
+            referencedColumnNames: id
+            validate: true
+        - addForeignKeyConstraint:
+            baseTableName: tournaments_participants
+            baseColumnNames: player_id
+            constraintName: fk_tournaments_participants_player
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedTableName: player
+            referencedColumnNames: id
+            validate: true
+        - addUniqueConstraint:
+            tableName: tournaments_participants
+            columnNames: player_id, tournament_id
+            constraintName: unq_column_player_id_tournament_id
+            deferrable: true
+            initiallyDeferred: true
+            disabled: false
+            validate: true

@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
 
             String token = jwtTokenProvider.createToken(player);
 
-            return new AuthenticationResponseDto(login, token);
+            return new AuthenticationResponseDto(player.getId(), login, token);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username or password");
         }

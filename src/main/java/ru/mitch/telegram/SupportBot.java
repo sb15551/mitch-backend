@@ -7,6 +7,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.mitch.constant.MessageConstant;
 import ru.mitch.model.TelegramData;
 import ru.mitch.service.TelegramMessageService;
 
@@ -34,6 +35,9 @@ public class SupportBot extends TelegramLongPollingBot {
             TelegramData telegramData = telegramMessageService.getTelegramDataWithRoleRoot();
             String message = telegramMessageService.processingSupportMessages(update);
             sendMessage(telegramData.getChatId(), message);
+        } else {
+            long chatId = update.getMessage().getChatId();
+            sendMessage(chatId, MessageConstant.ONLY_TEXT);
         }
     }
 

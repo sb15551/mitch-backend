@@ -31,4 +31,7 @@ public class Player {
     @ManyToOne
     private Status status;
 
+    @Transient
+    private Long chatId;
+
 }

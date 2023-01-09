@@ -4,17 +4,22 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.mitch.constant.MessageConstant;
 import ru.mitch.dto.RoleCodeEnum;
 import ru.mitch.dto.StatusCodeEnum;
+import ru.mitch.dto.player.PlayerRequestDto;
+import ru.mitch.dto.player.PlayerResponseDataDto;
+import ru.mitch.dto.player.PlayerResponseDto;
 import ru.mitch.dto.telegram.MessageTypeEnum;
 import ru.mitch.helper.ExtractorContentFile;
 import ru.mitch.helper.PasswordGenerator;
 import ru.mitch.mapping.PlayerMapper;
 import ru.mitch.model.Player;
+import ru.mitch.model.Status;
 import ru.mitch.model.TelegramData;
 import ru.mitch.repository.PlayerRepository;
 import ru.mitch.repository.RoleRepository;
@@ -22,6 +27,9 @@ import ru.mitch.repository.StatusRepository;
 import ru.mitch.repository.TelegramDataRepository;
 import ru.mitch.mapping.TelegramDataMapper;
 import ru.mitch.service.PlayerService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -89,6 +97,22 @@ public class PlayerServiceImpl implements PlayerService {
 
         String messageTemplate = ExtractorContentFile.getTemplateMessage(MessageConstant.REG_RESTORE_PASS_MESSAGE_TEMPLATE);
         return String.format(messageTemplate, password);
+    }
+
+    @Override
+    public PlayerResponseDto getPlayerList(PlayerRequestDto request) {
+        Status statusActive = statusRepository.findByCode(StatusCodeEnum.ACTIVE.name());
+        Integer total = telegramDataRepository.countAllByAllActivePlayers(statusActive);
+        List<PlayerResponseDataDto> data =
+                telegramDataRepository.findAllActivePlayers(statusActive, PageRequest.of(request.getPage(), request.getSize()))
+                        .stream()
+                        .map(tgData -> {
+                            Player player = tgData.getPlayer();
+                            player.setChatId(tgData.getChatId());
+                            return playerMapper.toResponseDto(player);
+                        })
+                        .collect(Collectors.toList());
+        return new PlayerResponseDto(total, data);
     }
 
     private boolean existPlayer(long chatId) {

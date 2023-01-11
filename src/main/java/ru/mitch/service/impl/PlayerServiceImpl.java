@@ -5,14 +5,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.mitch.constant.MessageConstant;
 import ru.mitch.dto.RoleCodeEnum;
 import ru.mitch.dto.StatusCodeEnum;
-import ru.mitch.dto.player.PlayerRequestDto;
-import ru.mitch.dto.player.PlayerResponseDataDto;
+import ru.mitch.dto.player.PlayerListRequestDto;
+import ru.mitch.dto.player.PlayerListResponseDataDto;
+import ru.mitch.dto.player.PlayerListResponseDto;
 import ru.mitch.dto.player.PlayerResponseDto;
 import ru.mitch.dto.telegram.MessageTypeEnum;
 import ru.mitch.helper.ExtractorContentFile;
@@ -100,10 +103,10 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public PlayerResponseDto getPlayerList(PlayerRequestDto request) {
+    public PlayerListResponseDto getPlayerList(PlayerListRequestDto request) {
         Status statusActive = statusRepository.findByCode(StatusCodeEnum.ACTIVE.name());
         Integer total = telegramDataRepository.countAllByAllActivePlayers(statusActive);
-        List<PlayerResponseDataDto> data =
+        List<PlayerListResponseDataDto> data =
                 telegramDataRepository.findAllActivePlayers(statusActive, PageRequest.of(request.getPage(), request.getSize()))
                         .stream()
                         .map(tgData -> {
@@ -112,7 +115,15 @@ public class PlayerServiceImpl implements PlayerService {
                             return playerMapper.toResponseDto(player);
                         })
                         .collect(Collectors.toList());
-        return new PlayerResponseDto(total, data);
+        return new PlayerListResponseDto(total, data);
+    }
+
+    @Override
+    public PlayerResponseDto getPlayer(Long id) {
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        TelegramData tgData = telegramDataRepository.findByPlayer(player);
+        return playerMapper.toResponseDto(player, tgData);
     }
 
     private boolean existPlayer(long chatId) {

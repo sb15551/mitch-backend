@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PlayerRequestDto {
+public class PlayerListRequestDto {
 
     @NotNull
     private Integer page;

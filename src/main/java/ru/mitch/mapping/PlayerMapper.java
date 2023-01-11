@@ -2,10 +2,12 @@ package ru.mitch.mapping;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.mitch.dto.player.PlayerResponseDataDto;
+import ru.mitch.dto.player.PlayerListResponseDataDto;
+import ru.mitch.dto.player.PlayerResponseDto;
 import ru.mitch.model.Player;
 import ru.mitch.model.Role;
 import ru.mitch.model.Status;
+import ru.mitch.model.TelegramData;
 
 @Mapper
 public interface PlayerMapper {
@@ -17,7 +19,11 @@ public interface PlayerMapper {
     @Mapping(target = "fullName", expression = "java(player.getName() + \" \" + player.getSurname())")
     @Mapping(source = "login", target = "telegramId")
     @Mapping(source = "chatId", target = "telegramChatId")
-    @Mapping(source = "role.code", target = "role")
-    PlayerResponseDataDto toResponseDto(Player player);
+    PlayerListResponseDataDto toResponseDto(Player player);
+
+    @Mapping(source = "player.id", target = "id")
+    @Mapping(source = "telegramData.chatId", target = "chatId")
+    @Mapping(source = "player.role", target = "role")
+    PlayerResponseDto toResponseDto(Player player, TelegramData telegramData);
 
 }

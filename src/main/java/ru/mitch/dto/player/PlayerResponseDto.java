@@ -1,16 +1,24 @@
 package ru.mitch.dto.player;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 public class PlayerResponseDto {
 
-    private Integer total;
+    private Long id;
 
-    private List<PlayerResponseDataDto> rows;
+    private String login;
+
+    private String name;
+
+    private String surname;
+
+    private RoleDto role;
+
+    private LocalDateTime createdDate;
+
+    private Long chatId;
 
 }

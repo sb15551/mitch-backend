@@ -3,13 +3,8 @@ package ru.mitch.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import ru.mitch.dto.player.PlayerListRequestDto;
-import ru.mitch.dto.player.PlayerListResponseDto;
-import ru.mitch.dto.player.PlayerResponseDto;
+import org.springframework.web.bind.annotation.*;
+import ru.mitch.dto.player.*;
 import ru.mitch.service.PlayerService;
 
 @RestController
@@ -27,6 +22,12 @@ public class PlayerController extends CommonController {
     @GetMapping(value = "/player/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PlayerResponseDto> getPlayer(@PathVariable Long id) {
         return ResponseEntity.ok(playerService.getPlayer(id));
+    }
+
+    @PostMapping(value = "/player", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> savePlayer(@RequestBody PlayerRequestDto request) {
+        playerService.savePlayer(request);
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -139,13 +139,9 @@ databaseChangeLog:
               - column:
                   name: login
                   type: VARCHAR(150)
-                  constraints:
-                    nullable: false
               - column:
                   name: password
                   type: VARCHAR
-                  constraints:
-                    nullable: false
               - column:
                   name: name
                   type: VARCHAR(500)

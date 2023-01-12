@@ -15,7 +15,7 @@ public interface TelegramDataRepository extends JpaRepository<TelegramData, Long
 
     TelegramData findByPlayer(Player player);
 
-    @Query("from TelegramData td where td.player.status = :status")
+    @Query("from TelegramData td where td.player.status = :status order by td.player.createdDate")
     List<TelegramData> findAllActivePlayers(Status status, Pageable pageable);
 
     @Query("select count(*) from TelegramData td where td.player.status = :status")

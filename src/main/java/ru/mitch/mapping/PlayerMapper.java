@@ -1,7 +1,7 @@
 package ru.mitch.mapping;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
+import ru.mitch.dto.player.PlayerDto;
 import ru.mitch.dto.player.PlayerListResponseDataDto;
 import ru.mitch.dto.player.PlayerResponseDto;
 import ru.mitch.model.Player;
@@ -9,7 +9,7 @@ import ru.mitch.model.Role;
 import ru.mitch.model.Status;
 import ru.mitch.model.TelegramData;
 
-@Mapper
+@Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface PlayerMapper {
 
     @Mapping(target = "id", ignore = true)
@@ -25,5 +25,14 @@ public interface PlayerMapper {
     @Mapping(source = "telegramData.chatId", target = "chatId")
     @Mapping(source = "player.role", target = "role")
     PlayerResponseDto toResponseDto(Player player, TelegramData telegramData);
+
+    @Mapping(source = "playerDto.id", target = "id")
+    @Mapping(source = "playerDto.name", target = "name")
+    @Mapping(source = "role", target = "role")
+    @Mapping(target = "createdDate", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "isConfirm", expression = "java(true)")
+    Player toEntity(PlayerDto playerDto, Role role, Status status);
+
+    Player toEntity(@MappingTarget Player player, PlayerDto playerDto);
 
 }

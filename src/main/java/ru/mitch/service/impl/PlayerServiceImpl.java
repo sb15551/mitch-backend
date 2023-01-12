@@ -1,6 +1,5 @@
 package ru.mitch.service.impl;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -8,15 +7,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.mitch.config.DataKeeper;
 import ru.mitch.constant.MessageConstant;
 import ru.mitch.dto.RoleCodeEnum;
 import ru.mitch.dto.StatusCodeEnum;
-import ru.mitch.dto.player.PlayerListRequestDto;
-import ru.mitch.dto.player.PlayerListResponseDataDto;
-import ru.mitch.dto.player.PlayerListResponseDto;
-import ru.mitch.dto.player.PlayerResponseDto;
+import ru.mitch.dto.TelegramDataTypeEnum;
+import ru.mitch.dto.player.*;
 import ru.mitch.dto.telegram.MessageTypeEnum;
 import ru.mitch.helper.ExtractorContentFile;
 import ru.mitch.helper.PasswordGenerator;
@@ -47,6 +46,7 @@ public class PlayerServiceImpl implements PlayerService {
     private final PlayerMapper playerMapper;
     private final TelegramDataMapper telegramDataMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final DataKeeper dataKeeper;
 
     @Override
     public Player findByLogin(String login) {
@@ -104,7 +104,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public PlayerListResponseDto getPlayerList(PlayerListRequestDto request) {
-        Status statusActive = statusRepository.findByCode(StatusCodeEnum.ACTIVE.name());
+        Status statusActive = dataKeeper.getStatuses().get(StatusCodeEnum.ACTIVE.name());
         Integer total = telegramDataRepository.countAllByAllActivePlayers(statusActive);
         List<PlayerListResponseDataDto> data =
                 telegramDataRepository.findAllActivePlayers(statusActive, PageRequest.of(request.getPage(), request.getSize()))
@@ -124,6 +124,27 @@ public class PlayerServiceImpl implements PlayerService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         TelegramData tgData = telegramDataRepository.findByPlayer(player);
         return playerMapper.toResponseDto(player, tgData);
+    }
+
+    @Transactional
+    @Override
+    public void savePlayer(PlayerRequestDto request) {
+        if (request.getId().equals(0L)) {
+            Player player = playerRepository.save(playerMapper.toEntity(request,
+                    dataKeeper.getRoles().get(request.getRole().name()),
+                    dataKeeper.getStatuses().get(StatusCodeEnum.ACTIVE.name())));
+
+            telegramDataRepository.save(telegramDataMapper.createTelegramData(0, player, TelegramDataTypeEnum.PRIVATE.name()));
+        } else {
+            Player player = playerRepository.findById(request.getId())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+            if (!dataKeeper.getRoles().get(request.getRole().name()).getCode()
+                    .equals(player.getRole().getCode())) {
+                player.setRole(dataKeeper.getRoles().get(request.getRole().name()));
+            }
+            playerRepository.save(playerMapper.toEntity(player, request));
+        }
     }
 
     private boolean existPlayer(long chatId) {

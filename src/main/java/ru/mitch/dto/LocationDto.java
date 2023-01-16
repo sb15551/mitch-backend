@@ -11,4 +11,7 @@ public class LocationDto {
     @NotNull
     private String name;
 
+    @NotNull
+    private String address;
+
 }

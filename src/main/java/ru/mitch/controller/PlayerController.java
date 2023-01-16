@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.mitch.dto.RequestPageableDto;
 import ru.mitch.dto.player.*;
 import ru.mitch.service.PlayerService;
 
@@ -15,7 +16,7 @@ public class PlayerController extends CommonController {
 
     @GetMapping(value = "/players", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PlayerListResponseDto> getPlayers(@RequestParam Integer page, @RequestParam Integer size) {
-        PlayerListRequestDto request = new PlayerListRequestDto(page, size);
+        RequestPageableDto request = new RequestPageableDto(page, size);
         return ResponseEntity.ok(playerService.getPlayerList(request));
     }
 

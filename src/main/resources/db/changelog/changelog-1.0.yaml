@@ -370,3 +370,14 @@ databaseChangeLog:
             referencedTableName: player
             referencedColumnNames: id
             validate: true
+  - changeSet:
+      id: 10
+      author: asurkov
+      comment: Add column table ref_location
+      changes:
+        - addColumn:
+            tableName: ref_location
+            columns:
+              - column:
+                  name: address
+                  type: VARCHAR(100)

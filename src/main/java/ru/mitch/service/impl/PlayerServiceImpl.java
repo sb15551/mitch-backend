@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.mitch.config.DataKeeper;
 import ru.mitch.constant.MessageConstant;
+import ru.mitch.dto.RequestPageableDto;
 import ru.mitch.dto.RoleCodeEnum;
 import ru.mitch.dto.StatusCodeEnum;
 import ru.mitch.dto.TelegramDataTypeEnum;
@@ -103,7 +104,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public PlayerListResponseDto getPlayerList(PlayerListRequestDto request) {
+    public PlayerListResponseDto getPlayerList(RequestPageableDto request) {
         Status statusActive = dataKeeper.getStatuses().get(StatusCodeEnum.ACTIVE.name());
         Integer total = telegramDataRepository.countAllByAllActivePlayers(statusActive);
         List<PlayerListResponseDataDto> data =

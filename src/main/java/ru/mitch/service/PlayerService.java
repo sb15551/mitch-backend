@@ -1,6 +1,7 @@
 package ru.mitch.service;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.mitch.dto.RequestPageableDto;
 import ru.mitch.dto.player.*;
 import ru.mitch.model.Player;
 
@@ -12,7 +13,7 @@ public interface PlayerService {
 
     String restorePassword(Update update);
 
-    PlayerListResponseDto getPlayerList(PlayerListRequestDto request);
+    PlayerListResponseDto getPlayerList(RequestPageableDto request);
 
     PlayerResponseDto getPlayer(Long id);
 

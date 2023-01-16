@@ -1,4 +1,4 @@
-package ru.mitch.dto.player;
+package ru.mitch.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PlayerListRequestDto {
+public class RequestPageableDto {
 
     @NotNull
     private Integer page;

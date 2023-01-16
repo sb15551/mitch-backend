@@ -9,4 +9,6 @@ public interface LocationMapper {
 
     Location toEntity(LocationDto dto);
 
+    LocationDto toDto(Location location);
+
 }

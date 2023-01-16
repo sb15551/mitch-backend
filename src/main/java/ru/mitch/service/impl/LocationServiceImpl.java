@@ -3,11 +3,21 @@ package ru.mitch.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import ru.mitch.dto.LocationResponseDto;
+import ru.mitch.dto.RequestPageableDto;
 import ru.mitch.mapping.LocationMapper;
+import ru.mitch.model.Location;
 import ru.mitch.repository.LocationRepository;
 import ru.mitch.dto.LocationDto;
 import ru.mitch.service.LocationService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -21,6 +31,22 @@ public class LocationServiceImpl implements LocationService {
     @Transactional
     public void upsertLocation(LocationDto locationDto) {
         locationRepository.save(locationMapper.toEntity(locationDto));
+    }
+
+    @Override
+    public LocationResponseDto getLocationList(RequestPageableDto request) {
+        List<LocationDto> locationDtoList = locationRepository.findAll(PageRequest.of(request.getPage(), request.getSize(), Sort.by("id")))
+                .get()
+                .map(locationMapper::toDto)
+                .collect(Collectors.toList());
+        return new LocationResponseDto(locationRepository.countAll(), locationDtoList);
+    }
+
+    @Override
+    public LocationDto getLocation(Long id) {
+        Location location = locationRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return locationMapper.toDto(location);
     }
 
 }

@@ -1,18 +1,20 @@
 package ru.mitch.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
 public class Tournament {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String title;
 
     private LocalDateTime eventDate;
 
@@ -26,10 +28,13 @@ public class Tournament {
 
     private Boolean isChristmas;
 
+    @OneToMany(mappedBy = "tournament")
+    private List<TournamentParticipant> participants;
+
     @ManyToOne
     private Location location;
 
-    @ManyToOne
+    @OneToOne
     private Album album;
 
     @ManyToOne

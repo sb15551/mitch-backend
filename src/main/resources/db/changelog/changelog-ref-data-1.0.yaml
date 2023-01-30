@@ -148,3 +148,20 @@ databaseChangeLog:
               - column:
                   name: type
                   value: "PRIVATE"
+  - changeSet:
+      id: 5
+      author: asurkov
+      comment: Insert statuse
+      changes:
+        - insert:
+            tableName: ref_status
+            columns:
+              - column:
+                  name: type
+                  value: TOURNAMENT
+              - column:
+                  name: code
+                  value: NOT_HAPPENED
+              - column:
+                  name: name
+                  value: Не состоялся

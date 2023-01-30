@@ -8,6 +8,8 @@ import ru.mitch.dto.RequestPageableDto;
 import ru.mitch.dto.player.*;
 import ru.mitch.service.PlayerService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class PlayerController extends CommonController {
@@ -18,6 +20,11 @@ public class PlayerController extends CommonController {
     public ResponseEntity<PlayerListResponseDto> getPlayers(@RequestParam Integer page, @RequestParam Integer size) {
         RequestPageableDto request = new RequestPageableDto(page, size);
         return ResponseEntity.ok(playerService.getPlayerList(request));
+    }
+
+    @GetMapping(value = "/all_players", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PlayerResponseDto>> getAllPlayers() {
+        return ResponseEntity.ok(playerService.getAllPlayers());
     }
 
     @GetMapping(value = "/player/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

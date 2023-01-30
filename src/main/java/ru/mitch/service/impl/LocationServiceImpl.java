@@ -8,16 +8,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import ru.mitch.dto.LocationDto;
 import ru.mitch.dto.LocationResponseDto;
 import ru.mitch.dto.RequestPageableDto;
 import ru.mitch.mapping.LocationMapper;
 import ru.mitch.model.Location;
 import ru.mitch.repository.LocationRepository;
-import ru.mitch.dto.LocationDto;
 import ru.mitch.service.LocationService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,11 +34,15 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationResponseDto getLocationList(RequestPageableDto request) {
+        Integer total = locationRepository.countAll();
+        if (total == 0) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
         List<LocationDto> locationDtoList = locationRepository.findAll(PageRequest.of(request.getPage(), request.getSize(), Sort.by("id")))
                 .get()
                 .map(locationMapper::toDto)
-                .collect(Collectors.toList());
-        return new LocationResponseDto(locationRepository.countAll(), locationDtoList);
+                .toList();
+        return new LocationResponseDto(total, locationDtoList);
     }
 
     @Override

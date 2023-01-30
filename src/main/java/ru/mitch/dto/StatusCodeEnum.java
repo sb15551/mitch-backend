@@ -7,6 +7,7 @@ public enum StatusCodeEnum {
     DELETED,
     REGISTRATION,
     INPROGRESS,
-    FINISHED
+    FINISHED,
+    NOT_HAPPENED
 
 }

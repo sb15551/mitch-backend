@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -30,6 +31,12 @@ public class Player {
 
     @ManyToOne
     private Status status;
+
+    @OneToMany(mappedBy = "player")
+    private List<TournamentParticipant> tournaments;
+
+    @OneToMany(mappedBy = "byPlayer")
+    private List<TournamentParticipant> cutDownHeads;
 
     @Transient
     private Long chatId;

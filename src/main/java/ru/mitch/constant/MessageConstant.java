@@ -6,6 +6,7 @@ public class MessageConstant {
     public static final String REG_SUCCESS_MESSAGE_TEMPLATE = "registrationSuccessfullyMessage.txt";
     public static final String REG_RESTORE_PASS_MESSAGE_TEMPLATE = "restorePasswordMessage.txt";
     public static final String HELP_MESSAGE_TEMPLATE = "helpMessage.txt";
+    public static final String TITLES = "titles.txt";
 
     public static final String HASH_TAG_FEEDBACK = "\\#feedback" + System.lineSeparator();
 

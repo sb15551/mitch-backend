@@ -21,6 +21,8 @@ public interface PlayerMapper {
     @Mapping(source = "chatId", target = "telegramChatId")
     PlayerListResponseDataDto toResponseDto(Player player);
 
+    PlayerResponseDto toPlayerResponseDto(Player player);
+
     @Mapping(source = "player.id", target = "id")
     @Mapping(source = "telegramData.chatId", target = "chatId")
     @Mapping(source = "player.role", target = "role")
@@ -34,5 +36,8 @@ public interface PlayerMapper {
     Player toEntity(PlayerDto playerDto, Role role, Status status);
 
     Player toEntity(@MappingTarget Player player, PlayerDto playerDto);
+
+    @Named("toPlayerDto")
+    PlayerDto toPlayerDto(Player player);
 
 }

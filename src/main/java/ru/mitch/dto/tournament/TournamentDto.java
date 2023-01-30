@@ -1,14 +1,17 @@
 package ru.mitch.dto.tournament;
 
 import lombok.Data;
+import ru.mitch.dto.LocationDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class TournamentUpsertDto {
+public class TournamentDto {
 
     private Long id;
+
+    private String title;
 
     private LocalDateTime eventDate;
 
@@ -20,10 +23,12 @@ public class TournamentUpsertDto {
 
     private Integer topPlaces;
 
-    private Long locationId;
+    private LocationDto location;
 
-    private Long statusId;
+    private String statusCode;
 
-    private List<TournamentParticipantDto> players;
+    private Boolean isChristmas;
+
+    private List<TournamentParticipantDto> participants;
 
 }

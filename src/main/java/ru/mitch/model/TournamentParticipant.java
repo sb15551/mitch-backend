@@ -12,11 +12,17 @@ public class TournamentParticipant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long tournamentId;
+    @ManyToOne
+    @JoinColumn(name = "tournament_id")
+    private Tournament tournament;
 
-    private Long playerId;
+    @ManyToOne
+    @JoinColumn(name = "player_id")
+    private Player player;
 
-    private Long byPlayerId;
+    @ManyToOne
+    @JoinColumn(name = "by_player_id")
+    private Player byPlayer;
 
     private Integer place;
 

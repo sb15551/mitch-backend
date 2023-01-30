@@ -5,6 +5,8 @@ import ru.mitch.dto.RequestPageableDto;
 import ru.mitch.dto.player.*;
 import ru.mitch.model.Player;
 
+import java.util.List;
+
 public interface PlayerService {
 
     Player findByLogin(String login);
@@ -14,6 +16,8 @@ public interface PlayerService {
     String restorePassword(Update update);
 
     PlayerListResponseDto getPlayerList(RequestPageableDto request);
+
+    List<PlayerResponseDto> getAllPlayers();
 
     PlayerResponseDto getPlayer(Long id);
 

@@ -16,11 +16,15 @@ import ru.mitch.dto.RequestPageableDto;
 import ru.mitch.dto.RoleCodeEnum;
 import ru.mitch.dto.StatusCodeEnum;
 import ru.mitch.dto.TelegramDataTypeEnum;
-import ru.mitch.dto.player.*;
+import ru.mitch.dto.player.PlayerListResponseDataDto;
+import ru.mitch.dto.player.PlayerListResponseDto;
+import ru.mitch.dto.player.PlayerRequestDto;
+import ru.mitch.dto.player.PlayerResponseDto;
 import ru.mitch.dto.telegram.MessageTypeEnum;
 import ru.mitch.helper.ExtractorContentFile;
 import ru.mitch.helper.PasswordGenerator;
 import ru.mitch.mapping.PlayerMapper;
+import ru.mitch.mapping.TelegramDataMapper;
 import ru.mitch.model.Player;
 import ru.mitch.model.Status;
 import ru.mitch.model.TelegramData;
@@ -28,11 +32,9 @@ import ru.mitch.repository.PlayerRepository;
 import ru.mitch.repository.RoleRepository;
 import ru.mitch.repository.StatusRepository;
 import ru.mitch.repository.TelegramDataRepository;
-import ru.mitch.mapping.TelegramDataMapper;
 import ru.mitch.service.PlayerService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -115,8 +117,21 @@ public class PlayerServiceImpl implements PlayerService {
                             player.setChatId(tgData.getChatId());
                             return playerMapper.toResponseDto(player);
                         })
-                        .collect(Collectors.toList());
+                        .toList();
         return new PlayerListResponseDto(total, data);
+    }
+
+    @Override
+    public List<PlayerResponseDto> getAllPlayers() {
+        Status statusActive = dataKeeper.getStatuses().get(StatusCodeEnum.ACTIVE.name());
+        return telegramDataRepository.findAllActivePlayers(statusActive)
+                .stream()
+                .map(tgData -> {
+                    Player player = tgData.getPlayer();
+                    player.setChatId(tgData.getChatId());
+                    return playerMapper.toPlayerResponseDto(player);
+                })
+                .toList();
     }
 
     @Override

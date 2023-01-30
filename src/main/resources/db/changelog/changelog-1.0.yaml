@@ -381,3 +381,14 @@ databaseChangeLog:
               - column:
                   name: address
                   type: VARCHAR(100)
+  - changeSet:
+      id: 11
+      author: asurkov
+      comment: Add column table tournament
+      changes:
+        - addColumn:
+            tableName: tournament
+            columns:
+              - column:
+                  name: title
+                  type: VARCHAR(200)

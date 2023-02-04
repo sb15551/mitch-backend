@@ -11,6 +11,8 @@ public interface PlayerService {
 
     Player findByLogin(String login);
 
+    Player findById(Long id);
+
     String registration(Update update);
 
     String restorePassword(Update update);
@@ -22,5 +24,7 @@ public interface PlayerService {
     PlayerResponseDto getPlayer(Long id);
 
     void savePlayer(PlayerRequestDto request);
+
+    Player savePlayerSettings(Player player, SettingsRequestDto request);
 
 }

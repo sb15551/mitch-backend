@@ -1,11 +1,14 @@
 package ru.mitch.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mitch.dto.RequestPageableDto;
+import ru.mitch.dto.auth.AuthenticationResponseDto;
 import ru.mitch.dto.player.*;
+import ru.mitch.security.auth.AuthService;
 import ru.mitch.service.PlayerService;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.List;
 public class PlayerController extends CommonController {
 
     private final PlayerService playerService;
+    private final AuthService authService;
 
     @GetMapping(value = "/players", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PlayerListResponseDto> getPlayers(@RequestParam Integer page, @RequestParam Integer size) {
@@ -36,6 +40,11 @@ public class PlayerController extends CommonController {
     public ResponseEntity<Void> savePlayer(@RequestBody PlayerRequestDto request) {
         playerService.savePlayer(request);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/player/settings", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AuthenticationResponseDto> saveSettings(@Valid @RequestBody SettingsRequestDto request) {
+        return ResponseEntity.ok(authService.saveSettings(request));
     }
 
 }

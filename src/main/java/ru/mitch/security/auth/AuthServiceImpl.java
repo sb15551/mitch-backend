@@ -8,8 +8,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mitch.dto.auth.AuthenticationRequestDto;
 import ru.mitch.dto.auth.AuthenticationResponseDto;
+import ru.mitch.dto.player.SettingsRequestDto;
 import ru.mitch.model.Player;
 import ru.mitch.security.jwt.JwtTokenProvider;
 import ru.mitch.service.PlayerService;
@@ -38,10 +40,20 @@ public class AuthServiceImpl implements AuthService {
 
             String token = jwtTokenProvider.createToken(player);
 
-            return new AuthenticationResponseDto(player.getId(), login, token);
+            return new AuthenticationResponseDto(player, token);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username or password");
         }
+    }
+
+    @Transactional
+    @Override
+    public AuthenticationResponseDto saveSettings(SettingsRequestDto request) {
+        Player player = playerService.findById(request.getId());
+        Player savedPlayer = playerService.savePlayerSettings(player, request);
+        String token = jwtTokenProvider.createToken(savedPlayer);
+
+        return new AuthenticationResponseDto(savedPlayer, token);
     }
 
 }

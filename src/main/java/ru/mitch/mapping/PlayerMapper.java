@@ -4,6 +4,7 @@ import org.mapstruct.*;
 import ru.mitch.dto.player.PlayerDto;
 import ru.mitch.dto.player.PlayerListResponseDataDto;
 import ru.mitch.dto.player.PlayerResponseDto;
+import ru.mitch.dto.player.SettingsRequestDto;
 import ru.mitch.model.Player;
 import ru.mitch.model.Role;
 import ru.mitch.model.Status;
@@ -36,6 +37,9 @@ public interface PlayerMapper {
     Player toEntity(PlayerDto playerDto, Role role, Status status);
 
     Player toEntity(@MappingTarget Player player, PlayerDto playerDto);
+
+    @Mapping(target = "id", ignore = true)
+    Player toEntity(@MappingTarget Player player, SettingsRequestDto settingsRequestDto);
 
     @Named("toPlayerDto")
     PlayerDto toPlayerDto(Player player);

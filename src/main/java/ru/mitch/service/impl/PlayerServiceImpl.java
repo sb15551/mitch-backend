@@ -16,10 +16,7 @@ import ru.mitch.dto.RequestPageableDto;
 import ru.mitch.dto.RoleCodeEnum;
 import ru.mitch.dto.StatusCodeEnum;
 import ru.mitch.dto.TelegramDataTypeEnum;
-import ru.mitch.dto.player.PlayerListResponseDataDto;
-import ru.mitch.dto.player.PlayerListResponseDto;
-import ru.mitch.dto.player.PlayerRequestDto;
-import ru.mitch.dto.player.PlayerResponseDto;
+import ru.mitch.dto.player.*;
 import ru.mitch.dto.telegram.MessageTypeEnum;
 import ru.mitch.helper.ExtractorContentFile;
 import ru.mitch.helper.PasswordGenerator;
@@ -54,6 +51,12 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Player findByLogin(String login) {
         return playerRepository.findByLogin(login);
+    }
+
+    @Override
+    public Player findById(Long id) {
+        return playerRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT));
     }
 
     @Transactional
@@ -161,6 +164,11 @@ public class PlayerServiceImpl implements PlayerService {
             }
             playerRepository.save(playerMapper.toEntity(player, request));
         }
+    }
+
+    @Override
+    public Player savePlayerSettings(Player player, SettingsRequestDto request) {
+        return playerRepository.save(playerMapper.toEntity(player, request));
     }
 
     private boolean existPlayer(long chatId) {

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.mitch.dto.RequestPageableDto;
+import ru.mitch.dto.tournament.RegistrationDto;
 import ru.mitch.dto.tournament.TournamentListDto;
 import ru.mitch.dto.tournament.TournamentDto;
 import ru.mitch.service.ProcessingService;
@@ -40,6 +41,12 @@ public class TournamentController extends CommonController {
     @GetMapping(value = "/random_title", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getTitle() {
         return ResponseEntity.ok(tournamentService.getTitle());
+    }
+
+    @PostMapping(value = "/tournament/register", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> registerForTournament(@Valid @RequestBody RegistrationDto registrationDto) {
+        tournamentService.registerForTournament(registrationDto);
+        return ResponseEntity.ok().build();
     }
 
 }

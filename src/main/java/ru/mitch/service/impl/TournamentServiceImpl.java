@@ -12,14 +12,14 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.mitch.config.DataKeeper;
 import ru.mitch.constant.MessageConstant;
 import ru.mitch.dto.RequestPageableDto;
-import ru.mitch.dto.tournament.TournamentDto;
-import ru.mitch.dto.tournament.TournamentListDataDto;
-import ru.mitch.dto.tournament.TournamentListDto;
-import ru.mitch.dto.tournament.TournamentParticipantDto;
+import ru.mitch.dto.tournament.*;
 import ru.mitch.helper.ExtractorContentFile;
 import ru.mitch.mapping.TournamentMapper;
+import ru.mitch.model.Player;
+import ru.mitch.model.Status;
 import ru.mitch.model.Tournament;
 import ru.mitch.model.TournamentParticipant;
+import ru.mitch.repository.PlayerRepository;
 import ru.mitch.repository.TournamentParticipantRepository;
 import ru.mitch.repository.TournamentRepository;
 import ru.mitch.service.TournamentService;
@@ -28,10 +28,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 
+import static ru.mitch.dto.StatusCodeEnum.ACTIVE;
+import static ru.mitch.dto.StatusCodeEnum.REGISTRATION;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class TournamentServiceImpl implements TournamentService {
+    private final PlayerRepository playerRepository;
 
     private final TournamentMapper tournamentMapper;
     private final TournamentRepository tournamentRepository;
@@ -112,6 +116,33 @@ public class TournamentServiceImpl implements TournamentService {
 
         tournament.setEventDate(tournament.getEventDate().truncatedTo(ChronoUnit.MINUTES));
         return tournamentMapper.toTournamentDto(tournament);
+    }
+
+    @Override
+    public void registerForTournament(RegistrationDto registrationDto) {
+        Status registrationStatus = dataKeeper.getStatuses().get(REGISTRATION.name());
+        Status activePlayer = dataKeeper.getStatuses().get(ACTIVE.name());
+        Tournament tournament = tournamentRepository.findById(registrationDto.getTournamentId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT));
+        if (!registrationStatus.getCode().equals(tournament.getStatus().getCode())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Регистрация закрыта");
+        }
+
+        Player player = playerRepository.findById(registrationDto.getPlayerId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT));
+        if (!activePlayer.getCode().equals(player.getStatus().getCode())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Игрок не активен");
+        }
+
+        if (registrationDto.getIsRegistered()) {
+            TournamentParticipant participant = tournamentParticipantRepository.findByTournamentAndPlayer(tournament, player);
+            tournamentParticipantRepository.delete(participant);
+        } else {
+            if (tournamentParticipantRepository.existsByTournamentAndPlayer(tournament, player)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Ты уже зарегистрирован на этом турнире");
+            }
+            tournamentParticipantRepository.save(tournamentMapper.newParticipant(tournament, player));
+        }
     }
 
 }

@@ -1,8 +1,9 @@
 package ru.mitch.service;
 
 import ru.mitch.dto.RequestPageableDto;
-import ru.mitch.dto.tournament.TournamentListDto;
+import ru.mitch.dto.tournament.RegistrationDto;
 import ru.mitch.dto.tournament.TournamentDto;
+import ru.mitch.dto.tournament.TournamentListDto;
 
 public interface TournamentService {
 
@@ -15,5 +16,7 @@ public interface TournamentService {
     String getTitle();
 
     TournamentDto getTournament(Long tournamentId);
+
+    void registerForTournament(RegistrationDto registrationDto);
 
 }

@@ -6,6 +6,7 @@ import org.mapstruct.Named;
 import ru.mitch.dto.tournament.TournamentDto;
 import ru.mitch.dto.tournament.TournamentListDataDto;
 import ru.mitch.dto.tournament.TournamentParticipantDto;
+import ru.mitch.model.Player;
 import ru.mitch.model.Tournament;
 import ru.mitch.model.TournamentParticipant;
 
@@ -48,5 +49,11 @@ public interface TournamentMapper {
         }
         return participantDto;
     }
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "place", expression = "java(0)")
+    @Mapping(target = "countRebuy", expression = "java(0)")
+    @Mapping(target = "isAddon", expression = "java(false)")
+    TournamentParticipant newParticipant(Tournament tournament, Player player);
 
 }

@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: asurkov
+      comment: Add view top_places
+      changes:
+        - createView:
+            viewName: top_places
+            replaceIfExists: true
+            selectQuery: "SELECT gen_random_uuid() as uuid, count_top, player_id, name, surname, place
+                          FROM (SELECT COUNT(p.id) AS count_top,
+                                       p.id AS player_id,
+                                       p.name,
+                                       p.surname,
+                                       tp.place,
+                                       ROW_NUMBER() OVER (PARTITION BY tp.place ORDER BY tp.place, COUNT(p.id) DESC, p.id) AS number
+                                FROM tournament t
+                                         JOIN ref_status rs ON t.status_id = rs.id
+                                         JOIN tournaments_participants tp
+                                              ON t.id = tp.tournament_id AND tp.place <> 0 AND tp.place <= t.top_places
+                                         JOIN player p ON tp.player_id = p.id
+                                WHERE rs.code = 'FINISHED'
+                                GROUP BY p.id, p.name, p.surname, tp.place
+                                ORDER BY tp.place, count_top DESC, p.id) AS top_places
+                          WHERE number <= 3"
+  - changeSet:
+      id: 2
+      author: asurkov
+      comment: Add view christmas_top
+      changes:
+        - createView:
+            viewName: christmas_top
+            replaceIfExists: true
+            selectQuery: "SELECT COUNT(p.id) AS count_top,
+                                 p.id AS player_id,
+                                 p.name,
+                                 p.surname,
+                                 tp.place
+                          FROM tournament t
+                                   JOIN ref_status rs ON t.status_id = rs.id
+                                   JOIN tournaments_participants tp
+                                        ON t.id = tp.tournament_id AND tp.place = 1
+                                   JOIN player p ON tp.player_id = p.id
+                          WHERE rs.code = 'FINISHED' AND t.is_christmas = true
+                          GROUP BY p.id, p.name, p.surname, tp.place
+                          ORDER BY tp.place, count_top DESC, p.id"
+  - changeSet:
+      id: 3
+      author: asurkov
+      comment: Add view babl_top
+      changes:
+        - createView:
+            viewName: babl_top
+            replaceIfExists: true
+            selectQuery: "SELECT COUNT(p.id) AS count_top,
+                                 p.id AS player_id,
+                                 p.name,
+                                 p.surname,
+                                 tp.place
+                          FROM tournament t
+                                   JOIN ref_status rs ON t.status_id = rs.id
+                                   JOIN tournaments_participants tp
+                                        ON t.id = tp.tournament_id AND tp.place <> 0 AND tp.place = (t.top_places + 1)
+                                   JOIN player p ON tp.player_id = p.id
+                          WHERE rs.code = 'FINISHED'
+                          GROUP BY p.id, p.name, p.surname, tp.place
+                          ORDER BY tp.place, count_top DESC, p.id
+                          LIMIT 3"
+  - changeSet:
+      id: 4
+      author: asurkov
+      comment: Add view knockout_top
+      changes:
+        - createView:
+            viewName: knockout_top
+            replaceIfExists: true
+            selectQuery: "SELECT COUNT(p.id) AS count_top,
+                                 p.id        AS player_id,
+                                 p.name,
+                                 p.surname,
+                                 MIN(tp.place) AS place
+                          FROM tournament t
+                                   JOIN ref_status rs ON t.status_id = rs.id
+                                   JOIN tournaments_participants tp
+                                        ON t.id = tp.tournament_id
+                                   JOIN player p ON tp.by_player_id = p.id
+                          WHERE rs.code = 'FINISHED'
+                          GROUP BY p.id, p.name, p.surname
+                          ORDER BY count_top DESC, p.id
+                          LIMIT 3"

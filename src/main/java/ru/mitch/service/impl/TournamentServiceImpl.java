@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import ru.mitch.config.CommonStatKeeper;
 import ru.mitch.config.DataKeeper;
 import ru.mitch.constant.MessageConstant;
 import ru.mitch.dto.RequestPageableDto;
+import ru.mitch.dto.StatusCodeEnum;
 import ru.mitch.dto.tournament.*;
 import ru.mitch.helper.ExtractorContentFile;
 import ru.mitch.mapping.TournamentMapper;
@@ -40,6 +42,7 @@ public class TournamentServiceImpl implements TournamentService {
     private final TournamentMapper tournamentMapper;
     private final TournamentRepository tournamentRepository;
     private final TournamentParticipantRepository tournamentParticipantRepository;
+    private final CommonStatKeeper commonStatKeeper;
 
     private final DataKeeper dataKeeper;
 
@@ -85,6 +88,10 @@ public class TournamentServiceImpl implements TournamentService {
 
         tournamentParticipantRepository.saveAll(participants);
         tournamentParticipantRepository.deleteAll(deleteParticipants);
+
+        if (request.getStatusCode() != null && request.getStatusCode().equals(StatusCodeEnum.FINISHED.name())) {
+            commonStatKeeper.initCommonStat();
+        }
     }
 
     @Override

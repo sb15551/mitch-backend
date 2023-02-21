@@ -2,7 +2,6 @@ package ru.mitch.security.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,12 +22,7 @@ public class AuthController extends CommonController {
 
     @PostMapping(value = "/auth/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthenticationResponseDto> login(@Valid @RequestBody AuthenticationRequestDto requestDto) {
-        return ResponseEntity.ok()
-                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, String.join(",", "*"))
-                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, String.join(",", "*"))
-                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, String.join(",", "*"))
-                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, Boolean.TRUE.toString())
-                .body(authService.login(requestDto));
+        return ResponseEntity.ok(authService.login(requestDto));
     }
 
 }

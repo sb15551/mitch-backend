@@ -46,4 +46,5 @@ jobs:
           password: ${{ secrets.DEPLOY_SERVER_USERNAME_PASSWORD }}
           commands: |
             docker-compose -f /root/app/backend/docker-compose.yaml down
+            docker image rm sb15551/mitch-backend
             docker-compose -f /root/app/backend/docker-compose.yaml up --build -d

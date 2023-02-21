@@ -7,7 +7,7 @@ services:
     env_file: ./.env
     container_name: mitch-be
     ports:
-      - 8080:8080
+      - 127.0.0.101:8080:8080
     environment:
       SPRING_APPLICATION_JSON: '{
         "spring.datasource.url"  : "jdbc:postgresql://$POSTGRESQL_HOST:$POSTGRESQL_PORT/$POSTGRESQL_DB",
@@ -21,3 +21,10 @@ services:
         "bot.support-name" : "$SUPPORT_BOT_NAME",
         "bot.support-token" : "$SUPPORT_BOT_TOKEN"
       }'
+    networks:
+      some_network:
+        aliases:
+          - backend.local
+networks:
+  some_network:
+    name: 'common_network'

@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  backend:
+    restart: on-failure
+    image: sb15551/mitch-backend:latest
+    env_file: ./.env
+    container_name: mitch-be
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url"  : "jdbc:postgresql://$POSTGRESQL_HOST:$POSTGRESQL_PORT/$POSTGRESQL_DB",
+        "spring.datasource.username" : "$POSTGRESQL_USER",
+        "spring.datasource.password" : "$POSTGRESQL_PASSWORD",
+        "spring.liquibase.url"  : "jdbc:postgresql://$POSTGRESQL_HOST:$POSTGRESQL_PORT/$POSTGRESQL_DB",
+        "spring.liquibase.user" : "$POSTGRESQL_USER",
+        "spring.liquibase.password" : "$POSTGRESQL_PASSWORD",
+        "bot.main-name" : "$MAIN_BOT_NAME",
+        "bot.main-token" : "$MAIN_BOT_TOKEN",
+        "bot.support-name" : "$SUPPORT_BOT_NAME",
+        "bot.support-token" : "$SUPPORT_BOT_TOKEN"
+      }'

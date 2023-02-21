@@ -1,5 +1,4 @@
 FROM maven:3.9.0-amazoncorretto-19 as maven
-ENV JAVA_DEFAULT_OPTS "-XX:MaxRAMPercentage=70.0"
 WORKDIR /app
 COPY ./pom.xml .
 COPY ./checkstyle.xml .
@@ -14,4 +13,4 @@ ARG DEPENDENCY=/app/target/dependency
 COPY --from=maven ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=maven ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=maven ${DEPENDENCY}/BOOT-INF/classes /app
-CMD java ${JAVA_DEFAULT_OPTS} -cp app:app/lib/* ru.mitch.MitchApplication
+CMD java -XX:MaxRAMPercentage=40.0 -cp app:app/lib/* ru.mitch.MitchApplication

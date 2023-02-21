@@ -1,1 +1,1 @@
-# tight-or-boil
+# Mitch poker club statistics application

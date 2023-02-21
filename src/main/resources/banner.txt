@@ -1,0 +1,9 @@
+.------.    .------.    .------.    .------.    .------.
+|M.--. |    |I.--. |    |T.--. |    |C.--. |    |H.--. |
+| (\/) |    | (\/) |    | :/\: |    | :/\: |    | :/\: |
+| :\/: |    | :\/: |    | (__) |    | :\/: |    | (__) |
+| '--'M|    | '--'I|    | '--'T|    | '--'C|    | '--'H|
+`------'    `------'    `------'    `------'    `------'
+
+${AnsiColor.GREEN}Spring Boot version:${AnsiColor.DEFAULT} ${spring-boot.version}
+${AnsiColor.GREEN}Applicaion:${AnsiColor.DEFAULT} ${spring.application.name}

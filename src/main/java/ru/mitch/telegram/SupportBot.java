@@ -34,7 +34,9 @@ public class SupportBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            if (!START.getCommand().equals(update.getMessage().getText())) {
+            String[] messageArray = update.getMessage().getText().split(" ");
+            String command = messageArray[0];
+            if (!START.getCommand().equals(command)) {
                 TelegramData telegramData = telegramMessageService.getTelegramDataWithRoleRoot();
                 String message = telegramMessageService.processingSupportMessages(update);
                 sendMessage(telegramData.getChatId(), message);

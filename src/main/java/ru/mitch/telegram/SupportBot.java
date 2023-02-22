@@ -51,7 +51,6 @@ public class SupportBot extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText(textToSend);
-        message.enableMarkdownV2(true);
 
         executeMessage(message);
     }

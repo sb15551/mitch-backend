@@ -11,6 +11,8 @@ import ru.mitch.constant.MessageConstant;
 import ru.mitch.model.TelegramData;
 import ru.mitch.service.TelegramMessageService;
 
+import static ru.mitch.dto.telegram.TelegramButtonEnum.START;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -32,9 +34,11 @@ public class SupportBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            TelegramData telegramData = telegramMessageService.getTelegramDataWithRoleRoot();
-            String message = telegramMessageService.processingSupportMessages(update);
-            sendMessage(telegramData.getChatId(), message);
+            if (!START.getCommand().equals(update.getMessage().getText())) {
+                TelegramData telegramData = telegramMessageService.getTelegramDataWithRoleRoot();
+                String message = telegramMessageService.processingSupportMessages(update);
+                sendMessage(telegramData.getChatId(), message);
+            }
         } else {
             long chatId = update.getMessage().getChatId();
             sendMessage(chatId, MessageConstant.ONLY_TEXT);

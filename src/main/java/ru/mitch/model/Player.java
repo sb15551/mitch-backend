@@ -2,6 +2,7 @@ package ru.mitch.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +25,7 @@ public class Player {
 
     private Boolean isConfirm;
 
+    @CreatedDate
     private LocalDateTime createdDate;
 
     @ManyToOne

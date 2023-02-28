@@ -31,6 +31,7 @@ import ru.mitch.repository.StatusRepository;
 import ru.mitch.repository.TelegramDataRepository;
 import ru.mitch.service.PlayerService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -82,6 +83,7 @@ public class PlayerServiceImpl implements PlayerService {
         );
         String password = PasswordGenerator.generateRandomPassword();
         newPlayer.setPassword(passwordEncoder.encode(password));
+        newPlayer.setCreatedDate(LocalDateTime.now());
         Player player = playerRepository.save(newPlayer);
 
         TelegramData telegramData = telegramDataMapper.createTelegramData(chatId, player, MessageTypeEnum.PRIVATE.name());

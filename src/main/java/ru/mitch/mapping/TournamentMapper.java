@@ -10,6 +10,7 @@ import ru.mitch.model.Player;
 import ru.mitch.model.Tournament;
 import ru.mitch.model.TournamentParticipant;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Mapper(uses = {PlayerMapper.class})
@@ -18,7 +19,7 @@ public interface TournamentMapper {
     @Mapping(source = "status.name", target = "status")
     TournamentListDataDto toDto(Tournament tournament);
 
-    @Mapping(source = "participants", target = "participants", qualifiedByName = "toListParticipantDto")
+    @Mapping(source = "participants", target = "participants", qualifiedByName = "toSortedListParticipantDto")
     @Mapping(source = "status.code", target = "statusCode")
     TournamentDto toTournamentDto(Tournament tournament);
 
@@ -27,8 +28,14 @@ public interface TournamentMapper {
     @Mapping(target = "status", expression = "java(true)")
     TournamentParticipantDto toTournamentParticipantDto(TournamentParticipant tournamentParticipant);
 
-    @Named("toListParticipantDto")
     List<TournamentParticipantDto> toListParticipantDto(List<TournamentParticipant> participants);
+
+    @Named("toSortedListParticipantDto")
+    default List<TournamentParticipantDto> toSortedListParticipantDto(List<TournamentParticipant> participants) {
+        return toListParticipantDto(participants).stream()
+                .sorted(Comparator.comparing(TournamentParticipantDto::getId))
+                .toList();
+    }
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "participants", ignore = true)

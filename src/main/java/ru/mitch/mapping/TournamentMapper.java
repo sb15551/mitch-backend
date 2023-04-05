@@ -17,7 +17,13 @@ import java.util.List;
 public interface TournamentMapper {
 
     @Mapping(source = "status.name", target = "status")
+    @Mapping(source = "participants", target = "countParticipants", qualifiedByName = "getCountParticipants")
     TournamentListDataDto toDto(Tournament tournament);
+
+    @Named("getCountParticipants")
+    default Integer getCountParticipants(List<TournamentParticipant> participants) {
+        return participants.size();
+    }
 
     @Mapping(source = "participants", target = "participants", qualifiedByName = "toSortedListParticipantDto")
     @Mapping(source = "status.code", target = "statusCode")

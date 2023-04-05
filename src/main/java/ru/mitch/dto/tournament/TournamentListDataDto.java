@@ -15,4 +15,6 @@ public class TournamentListDataDto {
 
     private String status;
 
+    private Integer countParticipants;
+
 }

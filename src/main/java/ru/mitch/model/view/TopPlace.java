@@ -17,4 +17,6 @@ public class TopPlace extends CommonView {
 
     private Long playerId;
 
+    private Integer place;
+
 }

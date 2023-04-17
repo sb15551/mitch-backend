@@ -165,3 +165,116 @@ databaseChangeLog:
               - column:
                   name: name
                   value: Не состоялся
+  - changeSet:
+      id: 6
+      author: asurkov
+      comment: Insert ref_metric
+      changes:
+        - insert:
+            tableName: ref_metric
+            columns:
+              - column:
+                  name: metric_code
+                  value: FIRST_PLACES
+              - column:
+                  name: metric_name
+                  value: Больше всех побед
+              - column:
+                  name: metric_order
+                  value: 1
+        - insert:
+            tableName: ref_metric
+            columns:
+              - column:
+                  name: metric_code
+                  value: SECOND_PLACES
+              - column:
+                  name: metric_name
+                  value: Чаще всех 2-е место
+              - column:
+                  name: metric_order
+                  value: 2
+        - insert:
+            tableName: ref_metric
+            columns:
+              - column:
+                  name: metric_code
+                  value: THIRD_PLACES
+              - column:
+                  name: metric_name
+                  value: Чаще всех 3-е место
+              - column:
+                  name: metric_order
+                  value: 3
+        - insert:
+            tableName: ref_metric
+            columns:
+              - column:
+                  name: metric_code
+                  value: BABL_PLACES
+              - column:
+                  name: metric_name
+                  value: Больше всех баббл
+              - column:
+                  name: metric_order
+                  value: 4
+        - insert:
+            tableName: ref_metric
+            columns:
+              - column:
+                  name: metric_code
+                  value: CHRISTMAS_PLACES
+              - column:
+                  name: metric_name
+                  value: Рождественский турнир
+              - column:
+                  name: metric_order
+                  value: 5
+        - insert:
+            tableName: ref_metric
+            columns:
+              - column:
+                  name: metric_code
+                  value: KNOCKOUTS
+              - column:
+                  name: metric_name
+                  value: Нокауты
+              - column:
+                  name: metric_order
+                  value: 6
+        - insert:
+            tableName: ref_metric
+            columns:
+              - column:
+                  name: metric_code
+                  value: MOST_PRIZES
+              - column:
+                  name: metric_name
+                  value: Больше всех в призах
+              - column:
+                  name: metric_order
+                  value: 7
+        - insert:
+            tableName: ref_metric
+            columns:
+              - column:
+                  name: metric_code
+                  value: MOST_REBUY
+              - column:
+                  name: metric_name
+                  value: Взял больше всех ребаев
+              - column:
+                  name: metric_order
+                  value: 8
+        - insert:
+            tableName: ref_metric
+            columns:
+              - column:
+                  name: metric_code
+                  value: LOSERS
+              - column:
+                  name: metric_name
+                  value: Не попадал в призы
+              - column:
+                  name: metric_order
+                  value:  9

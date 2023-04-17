@@ -13,4 +13,6 @@ public class KnockoutTop extends CommonView {
     @Id
     private Long playerId;
 
+    private Integer place;
+
 }

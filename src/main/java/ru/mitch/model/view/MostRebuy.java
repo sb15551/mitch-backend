@@ -8,11 +8,9 @@ import org.hibernate.annotations.Immutable;
 @Data
 @Entity
 @Immutable
-public class ChristmasTop extends CommonView {
+public class MostRebuy extends CommonView {
 
     @Id
     private Long playerId;
-
-    private Integer place;
 
 }

@@ -392,3 +392,29 @@ databaseChangeLog:
               - column:
                   name: title
                   type: VARCHAR(200)
+  - changeSet:
+      id: 12
+      author: asurkov
+      comment: Create table ref_metric
+      changes:
+        - createTable:
+            tableName: ref_metric
+            remarks: Directory of metrics
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: Identifier
+              - column:
+                  name: metric_code
+                  type: VARCHAR(100)
+              - column:
+                  name: metric_name
+                  type: VARCHAR
+              - column:
+                  name: metric_order
+                  type: INT

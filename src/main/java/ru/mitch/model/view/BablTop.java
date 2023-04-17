@@ -13,4 +13,6 @@ public class BablTop extends CommonView {
     @Id
     private Long playerId;
 
+    private Integer place;
+
 }

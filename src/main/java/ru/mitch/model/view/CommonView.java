@@ -13,6 +13,4 @@ public abstract class CommonView {
 
     private Integer countTop;
 
-    private Integer place;
-
 }

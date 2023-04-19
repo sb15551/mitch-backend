@@ -14,6 +14,7 @@ import ru.mitch.mapping.MetricMapper;
 import ru.mitch.mapping.StatMapper;
 import ru.mitch.model.RefMetric;
 import ru.mitch.model.Status;
+import ru.mitch.model.view.*;
 import ru.mitch.repository.RefMetricRepository;
 import ru.mitch.repository.TournamentRepository;
 import ru.mitch.repository.view.*;
@@ -22,7 +23,9 @@ import ru.mitch.service.CommonStatService;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static ru.mitch.dto.TopPlacesEnum.*;
 
@@ -101,75 +104,58 @@ public class CommonStatServiceImpl implements CommonStatService {
     }
 
     private List<StatDataDto> getTopPlacesByPlace(TopPlacesEnum topPlacesEnum, boolean isOnlyTop) {
-        return isOnlyTop ?
-                topPlaceRepository.findAllByPlace(topPlacesEnum.getPlace(), TOP)
-                        .stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList()) :
-                topPlaceRepository.findAllByPlace(topPlacesEnum.getPlace())
-                        .stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList());
+        Stream<TopPlace> stream = isOnlyTop ?
+                topPlaceRepository.findAllByPlace(topPlacesEnum.getPlace(), TOP).stream() :
+                topPlaceRepository.findAllByPlace(topPlacesEnum.getPlace()).stream();
+        return getValueList(stream, statMapper::toStatDataDto);
     }
 
     private List<StatDataDto> getChristmasTop(boolean isOnlyTop) {
-        return isOnlyTop ?
-                christmasTopRepository.findAll(TOP).stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList()) :
-                christmasTopRepository.findAll().stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList());
+        Stream<ChristmasTop> stream = isOnlyTop ?
+                christmasTopRepository.findAll(TOP).stream() :
+                christmasTopRepository.findAll().stream();
+        return getValueList(stream, statMapper::toStatDataDto);
     }
 
     private List<StatDataDto> getBablTop(boolean isOnlyTop) {
-        return isOnlyTop ?
-                bablTopRepository.findAll(TOP).stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList()) :
-                bablTopRepository.findAll().stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList());
+        Stream<BablTop> stream = isOnlyTop ?
+                bablTopRepository.findAll(TOP).stream() :
+                bablTopRepository.findAll().stream();
+        return getValueList(stream, statMapper::toStatDataDto);
     }
 
     private List<StatDataDto> getKnockoutsTop(boolean isOnlyTop) {
-        return isOnlyTop ?
-                knockoutTopRepository.findAll(TOP).stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList()) :
-                knockoutTopRepository.findAll().stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList());
+        Stream<KnockoutTop> stream = isOnlyTop ?
+                knockoutTopRepository.findAll(TOP).stream() :
+                knockoutTopRepository.findAll().stream();
+        return getValueList(stream, statMapper::toStatDataDto);
     }
 
     private List<StatDataDto> getMostPrizesTop(boolean isOnlyTop) {
-        return isOnlyTop ?
-                mostPrizesTopRepository.findAll(TOP).stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList()) :
-                mostPrizesTopRepository.findAll().stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList());
+        Stream<MostPrize> stream = isOnlyTop ?
+                mostPrizesTopRepository.findAll(TOP).stream() :
+                mostPrizesTopRepository.findAll().stream();
+        return getValueList(stream, statMapper::toStatDataDto);
     }
 
     private List<StatDataDto> getMostRebuyTop(boolean isOnlyTop) {
-        return isOnlyTop ?
-                mostRebuyTopRepository.findAll(TOP).stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList()) :
-                mostRebuyTopRepository.findAll().stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList());
+        Stream<MostRebuy> stream = isOnlyTop ?
+                mostRebuyTopRepository.findAll(TOP).stream() :
+                mostRebuyTopRepository.findAll().stream();
+        return getValueList(stream, statMapper::toStatDataDto);
     }
 
     private List<StatDataDto> getLosersTop(boolean isOnlyTop) {
-        return isOnlyTop ?
-                losersTopRepository.findAll(TOP).stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList()) :
-                losersTopRepository.findAll().stream()
-                        .map(statMapper::toStatDataDto)
-                        .collect(Collectors.toList());
+        Stream<Loser> stream = isOnlyTop ?
+                losersTopRepository.findAll(TOP).stream() :
+                losersTopRepository.findAll().stream();
+        return getValueList(stream, statMapper::toStatDataDto);
+    }
+
+    private <T, R> List<R> getValueList(Stream<T> stream, Function<T, R> methodReference) {
+        return stream
+                .map(methodReference)
+                .collect(Collectors.toList());
     }
 
 }

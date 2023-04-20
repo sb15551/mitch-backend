@@ -13,10 +13,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import ru.mitch.security.jwt.JwtTokenProvider;
 import ru.mitch.security.jwt.JwtConfigurer;
+import ru.mitch.security.jwt.JwtTokenProvider;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,7 +26,14 @@ public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private static final String LOGIN_ENDPOINT = "/api/v1/auth/login";
+    private static final String[] BASE_WHITE_LIST = {
+            "/api/v1/auth/login"
+    };
+
+    private static final String[] ACTUATOR = {
+            "/actuator/**",
+            "/actuator/prometheus/**"
+    };
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -45,7 +54,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(LOGIN_ENDPOINT).permitAll()
+                        .requestMatchers(collectUrl(BASE_WHITE_LIST, ACTUATOR)).permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic().disable()
@@ -69,4 +78,11 @@ public class SecurityConfig {
         configurationSource.registerCorsConfiguration("/**", configuration);
         return configurationSource;
     }
+
+    private String[] collectUrl(String[]... list) {
+        return Stream.of(list)
+                .flatMap(Arrays::stream)
+                .toArray(String[]::new);
+    }
+
 }

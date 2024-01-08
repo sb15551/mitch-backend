@@ -58,21 +58,14 @@ public class TelegramMessageServiceImpl implements TelegramMessageService {
 
         String resultMessage;
         switch (button) {
-            case START:
-                resultMessage = startCommandReceived(name);
-                break;
-            case REGISTER:
-                resultMessage = playerService.registration(update);
-                break;
-            case FORGOT:
-                resultMessage = playerService.restorePassword(update);
-                break;
-            case HELP:
+            case START -> resultMessage = startCommandReceived(name);
+            case REGISTER -> resultMessage = playerService.registration(update);
+            case FORGOT -> resultMessage = playerService.restorePassword(update);
+            case HELP -> {
                 String templateHelp = ExtractorContentFile.getTemplateMessage(MessageConstant.HELP_MESSAGE_TEMPLATE);
                 resultMessage = String.format(templateHelp, name);
-                break;
-            default:
-                resultMessage = MessageConstant.DEFAULT_MESSAGE;
+            }
+            default -> resultMessage = MessageConstant.DEFAULT_MESSAGE;
         }
         return resultMessage;
     }
